@@ -13,10 +13,14 @@ body {
   place-content: center;
   width: 100vw;
   height: 100vh;
+  background: #ddd;
 }
 
 #canvas {
   width: 800px;
   height: 500px;
-  border: 3px solid #333;
+  background: white;
+  -webkit-box-shadow: #222 0px 0px 0px 10px;
+     -moz-box-shadow: #222 0px 0px 0px 10px;
+          box-shadow: #222 0px 0px 0px 10px;
 }/*# sourceMappingURL=index.css.map */

@@ -4,6 +4,7 @@ import SocketIO from 'socket.io';
 import path from 'path';
 import Game from './game/Game.js';
 import Player from './game/Player.js';
+import { randomColor } from './util/random.js';
 const DIR_NAME = path.resolve();
 const app = express();
 const server = http.createServer(app);
@@ -21,20 +22,7 @@ const game = new Game();
 const FPS = 60;
 function update() {
     io.emit('poll');
-    game.players.forEach(player => {
-        let speed = 3;
-        if ((player.movement.UP || player.movement.DOWN) && (player.movement.LEFT || player.movement.RIGHT)) {
-            speed *= (1 / Math.sqrt(2));
-        }
-        if (player.movement.UP)
-            player.pos.y -= speed;
-        if (player.movement.RIGHT)
-            player.pos.x += speed;
-        if (player.movement.DOWN)
-            player.pos.y += speed;
-        if (player.movement.LEFT)
-            player.pos.x -= speed;
-    });
+    game.update();
     io.emit('game', game.toObject());
 }
 setInterval(() => update(), 1000 / FPS);
@@ -43,10 +31,18 @@ io.on('connection', (socket) => {
     const playerNumber = game.players.size;
     const player = new Player(`player${playerNumber}`, socket.id);
     player.pos = { x: playerNumber * 40 + 30, y: 70 };
+    player.color = randomColor();
     game.addPlayers(player);
     io.emit('game', game.toObject());
     socket.on('movement key', (direction, status) => {
         player.movement[direction] = status;
+    });
+    socket.on('mouse', (pressed) => {
+        player.pressingMouse = pressed;
+    });
+    socket.on('mouse coords', (coords) => {
+        player.aimedAtCoords.x = coords.x;
+        player.aimedAtCoords.y = coords.y;
     });
     socket.on('disconnect', () => {
         console.log("socket disconnected");

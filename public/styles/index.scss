@@ -11,10 +11,12 @@ body {
 	place-content: center;
 	width: 100vw;
 	height: 100vh;
+	background: #ddd;
 }
 
 #canvas {
 	width: 800px;
 	height: 500px;
-	border: 3px solid #333;
+	background: white;
+	box-shadow: #222 0px 0px 0px 10px;
 }

@@ -5,3 +5,17 @@ export function randomInteger(min: number, max: number): number {
 export function randomArrayElement<T>(arr: T[]) {
 	return arr[randomInteger(0, arr.length - 1)];
 }
+
+export function randomColor() {
+	return randomArrayElement([
+		"red",
+		"blue",
+		"green",
+		"lime",
+		"yellow",
+		"black",
+		"orange",
+		"purple",
+		"magneta",
+	])
+}

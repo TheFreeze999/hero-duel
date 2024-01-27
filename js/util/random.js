@@ -4,3 +4,16 @@ export function randomInteger(min, max) {
 export function randomArrayElement(arr) {
     return arr[randomInteger(0, arr.length - 1)];
 }
+export function randomColor() {
+    return randomArrayElement([
+        "red",
+        "blue",
+        "green",
+        "lime",
+        "yellow",
+        "black",
+        "orange",
+        "purple",
+        "magneta",
+    ]);
+}
