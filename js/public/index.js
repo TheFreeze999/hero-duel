@@ -1,10 +1,8 @@
+import keyIsDown from "./KeyPress.js";
 const socket = io();
 const cnv = document.querySelector('#canvas');
 const ctx = cnv.getContext('2d');
-const FPS = 60;
 let gameAsObject = null;
-function update() {
-}
 function render() {
     ctx.clearRect(0, 0, cnv.width, cnv.height);
     if (gameAsObject)
@@ -15,8 +13,13 @@ function render() {
     window.requestAnimationFrame(() => render());
 }
 render();
-setInterval(() => update(), 1000 / FPS);
+socket.on('poll', () => {
+    socket.emit('movement key', "UP", keyIsDown('ArrowUp'));
+    socket.emit('movement key', "RIGHT", keyIsDown('ArrowRight'));
+    socket.emit('movement key', "DOWN", keyIsDown('ArrowDown'));
+    socket.emit('movement key', "LEFT", keyIsDown('ArrowLeft'));
+});
 socket.on('game', (gameData) => {
     gameAsObject = gameData;
+    console.log(gameData.id);
 });
-export {};
