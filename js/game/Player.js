@@ -20,7 +20,7 @@ class Player {
     pressingMouse = false;
     reloadFrames = 10;
     aimedAtCoords = new Vector();
-    bulletSpeed = 5;
+    bulletSpeed = 20;
     /** Bullet spread (degrees) */
     bulletSpread = 0;
     color = "#00f";

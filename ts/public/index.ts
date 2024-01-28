@@ -7,6 +7,10 @@ const socket: Socket = io();
 export const cnv = document.querySelector('#canvas') as HTMLCanvasElement;
 const ctx = cnv.getContext('2d') as CanvasRenderingContext2D;
 
+const gameID = document.location.href.split('/').at(-1) ?? "";
+console.log(gameID);
+socket.emit('entry', gameID)
+
 
 let gameData: Game.AsObject | null = null;
 

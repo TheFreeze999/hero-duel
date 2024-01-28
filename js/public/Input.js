@@ -22,6 +22,9 @@ document.addEventListener('mousedown', (e) => {
     e.preventDefault();
     mousePressed = true;
 });
+document.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+});
 document.addEventListener('mouseup', (e) => {
     e.preventDefault();
     mousePressed = false;

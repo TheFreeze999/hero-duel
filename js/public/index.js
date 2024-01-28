@@ -2,6 +2,9 @@ import { getMouseCoords, keyIsDown, mouseIsPressed } from "./Input.js";
 const socket = io();
 export const cnv = document.querySelector('#canvas');
 const ctx = cnv.getContext('2d');
+const gameID = document.location.href.split('/').at(-1) ?? "";
+console.log(gameID);
+socket.emit('entry', gameID);
 let gameData = null;
 function render() {
     ctx.clearRect(0, 0, cnv.width, cnv.height);

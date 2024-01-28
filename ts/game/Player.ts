@@ -25,7 +25,7 @@ class Player {
 	reloadFrames = 10;
 	aimedAtCoords = new Vector();
 
-	bulletSpeed = 5;
+	bulletSpeed = 20;
 	/** Bullet spread (degrees) */
 	bulletSpread = 0;
 
