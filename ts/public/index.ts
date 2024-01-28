@@ -1,3 +1,4 @@
+
 import { Socket } from "socket.io";
 import Game from "../game/Game.js";
 import { getMouseCoords, keyIsDown, mouseIsPressed } from "./Input.js";
@@ -7,9 +8,12 @@ const socket: Socket = io();
 export const cnv = document.querySelector('#canvas') as HTMLCanvasElement;
 const ctx = cnv.getContext('2d') as CanvasRenderingContext2D;
 
+const name = prompt('Select a name:', 'player') ?? 'player';
+
 const gameID = document.location.href.split('/').at(-1) ?? "";
-console.log(gameID);
-socket.emit('entry', gameID)
+const codeEl = document.querySelector('.code') as HTMLSpanElement;
+codeEl.innerText = gameID;
+socket.emit('entry', gameID, name)
 
 
 let gameData: Game.AsObject | null = null;
@@ -21,14 +25,20 @@ function render() {
 	if (gameData) {
 		// Render Game Objects
 		gameData.gameObjects.forEach(gameObject => {
+			ctx.save();
 			ctx.fillStyle = "black";
 			ctx.fillRect(gameObject.pos.x - gameObject.size.x / 2, gameObject.pos.y - gameObject.size.y / 2, gameObject.size.x, gameObject.size.y);
+			ctx.restore();
 		})
 
 		// Render Players
 		gameData.players.forEach(player => {
+			ctx.save();
 			ctx.fillStyle = player.color;
 			ctx.fillRect(player.pos.x - player.size.x / 2, player.pos.y - player.size.y / 2, player.size.x, player.size.y);
+			ctx.textAlign = 'center';
+			ctx.fillText(player.name, player.pos.x, player.pos.y - 20);
+			ctx.restore();
 		});
 	}
 

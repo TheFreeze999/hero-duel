@@ -1,4 +1,5 @@
-import { cnv } from "./index.js";
+const cnv = document.querySelector('#canvas') as HTMLCanvasElement;
+
 
 const keys = new Map<string, boolean>();
 let mousePressed = false;
@@ -23,14 +24,11 @@ document.addEventListener('keyup', (e) => {
 })
 
 
-document.addEventListener('mousedown', (e) => {
+cnv.addEventListener('mousedown', (e) => {
 	e.preventDefault();
 	mousePressed = true;
 });
-document.addEventListener('contextmenu', (e) => {
-	e.preventDefault();
-})
-document.addEventListener('mouseup', (e) => {
+cnv.addEventListener('mouseup', (e) => {
 	e.preventDefault();
 	mousePressed = false;
 })

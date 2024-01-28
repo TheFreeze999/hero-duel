@@ -5,7 +5,7 @@ import { collisionRectRect } from "../util/collision.js";
 
 class Bullet {
 	pos = new Vector();
-	size = new Vector(80);
+	size = new Vector(8);
 	vel = new Vector();
 
 	game: Game | null = null;

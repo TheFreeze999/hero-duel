@@ -39,14 +39,14 @@ function update() {
 setInterval(() => update(), 1000 / FPS);
 io.on('connection', (socket) => {
     console.log("socket connected");
-    socket.on('entry', (gameID) => {
+    socket.on('entry', (gameID, name) => {
         console.log("player entry");
         const game = games.find(g => g.id === gameID);
         if (!game)
             return;
         socket.join(game.id);
+        const player = new Player(name, socket.id);
         const playerNumber = game.players.size;
-        const player = new Player(`player${playerNumber}`, socket.id);
         player.pos.set(playerNumber * 40 + 30, 70);
         player.color = randomColor();
         game.addPlayers(player);

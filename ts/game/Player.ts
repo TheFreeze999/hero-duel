@@ -22,10 +22,10 @@ class Player {
 	speed = 3;
 
 	pressingMouse = false;
-	reloadFrames = 10;
+	reloadFrames = 30;
 	aimedAtCoords = new Vector();
 
-	bulletSpeed = 20;
+	bulletSpeed = 5;
 	/** Bullet spread (degrees) */
 	bulletSpread = 0;
 
