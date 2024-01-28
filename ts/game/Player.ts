@@ -2,13 +2,16 @@ import { Socket } from "socket.io";
 import Game from "./Game.js";
 import UIDGenerator from "../util/UIDGenerator.js";
 import Bullet from "./Bullet.js";
+import { randomInteger } from "../util/random.js";
+import Vector from "../util/Vector.js";
+import { io } from "../app.js";
 
 class Player {
 	private static uIDGenerator = new UIDGenerator(6);
 	id = Player.uIDGenerator.generate();
 
-	pos = { x: 0, y: 0 };
-	size = { x: 30, y: 30 };
+	pos = new Vector();
+	size = new Vector(30);
 
 	movement = {
 		UP: false,
@@ -20,8 +23,11 @@ class Player {
 
 	pressingMouse = false;
 	reloadFrames = 10;
-	aimedAtCoords = { x: 0, y: 0 };
+	aimedAtCoords = new Vector();
+
 	bulletSpeed = 5;
+	/** Bullet spread (degrees) */
+	bulletSpread = 0;
 
 	color = "#00f";
 
@@ -41,10 +47,10 @@ class Player {
 		if ((this.movement.UP || this.movement.DOWN) && (this.movement.LEFT || this.movement.RIGHT)) {
 			speed *= (1 / Math.sqrt(2));
 		}
-		if (this.movement.UP) this.pos.y -= speed;
-		if (this.movement.RIGHT) this.pos.x += speed;
-		if (this.movement.DOWN) this.pos.y += speed;
-		if (this.movement.LEFT) this.pos.x -= speed;
+		if (this.movement.UP) this.pos.subtract(0, speed);
+		if (this.movement.RIGHT) this.pos.add(speed, 0);
+		if (this.movement.DOWN) this.pos.add(0, speed);
+		if (this.movement.LEFT) this.pos.subtract(speed, 0);
 
 		// MOUSE PRESS
 		if (this.pressingMouse && this.lastShot > this.reloadFrames) {
@@ -55,14 +61,12 @@ class Player {
 
 	shoot() {
 		const bullet = new Bullet(this);
-		const xDiff = this.aimedAtCoords.x - this.pos.x;
-		const yDiff = this.aimedAtCoords.y - this.pos.y;
-		const theta = Math.atan2(yDiff, xDiff);
+		const diffVec = this.aimedAtCoords.difference(this.pos)
+		const theta = diffVec.atan2() + randomInteger(-this.bulletSpread, this.bulletSpread) * Math.PI / 180;
 
-		const velX = Math.cos(theta);
-		const velY = Math.sin(theta);
+		const vel = Vector.unitVectorFromAngle(theta).product(this.bulletSpeed, this.bulletSpeed);
+		bullet.vel.set(vel);
 
-		bullet.vel = { x: velX * this.bulletSpeed, y: velY * this.bulletSpeed };
 		this.game?.addGameObjects(bullet);
 	}
 
@@ -77,6 +81,13 @@ class Player {
 			pressingMouse: this.pressingMouse,
 			color: this.color
 		}
+	}
+
+	die() {
+		if (this.game) this.game.removePlayers(this);
+		const socket = io.sockets.sockets[this.socketID];
+		if (!socket) return;
+		socket.emit('death')
 	}
 }
 

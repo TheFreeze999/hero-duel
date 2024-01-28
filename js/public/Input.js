@@ -30,5 +30,4 @@ document.addEventListener('mousemove', (e) => {
     const cnvRect = cnv.getBoundingClientRect();
     mouseCoords.x = e.pageX - cnvRect.left;
     mouseCoords.y = e.pageY - cnvRect.top;
-    console.log(mouseCoords);
 });

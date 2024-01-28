@@ -11,7 +11,7 @@ const DIR_NAME = path.resolve();
 const app = express();
 const server = http.createServer(app);
 
-const io = SocketIO.listen(server);
+export const io = SocketIO.listen(server);
 
 const PORT = 8080;
 
@@ -49,7 +49,7 @@ io.on('connection', (socket) => {
 	const playerNumber = game.players.size;
 
 	const player = new Player(`player${playerNumber}`, socket.id);
-	player.pos = { x: playerNumber * 40 + 30, y: 70 };
+	player.pos.set(playerNumber * 40 + 30, 70);
 	player.color = randomColor();
 	game.addPlayers(player);
 

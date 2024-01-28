@@ -21,13 +21,16 @@ function render() {
 }
 render();
 socket.on('poll', () => {
-    socket.emit('movement key', "UP", keyIsDown('ArrowUp'));
-    socket.emit('movement key', "RIGHT", keyIsDown('ArrowRight'));
-    socket.emit('movement key', "DOWN", keyIsDown('ArrowDown'));
-    socket.emit('movement key', "LEFT", keyIsDown('ArrowLeft'));
+    socket.emit('movement key', "UP", keyIsDown('ArrowUp') || keyIsDown('w'));
+    socket.emit('movement key', "RIGHT", keyIsDown('ArrowRight') || keyIsDown('d'));
+    socket.emit('movement key', "DOWN", keyIsDown('ArrowDown') || keyIsDown('s'));
+    socket.emit('movement key', "LEFT", keyIsDown('ArrowLeft') || keyIsDown('a'));
     socket.emit('mouse', mouseIsPressed());
     socket.emit('mouse coords', getMouseCoords());
 });
 socket.on('game', (_gameData) => {
     gameData = _gameData;
+});
+socket.on('death', () => {
+    alert("you died");
 });

@@ -8,7 +8,7 @@ import { randomColor } from './util/random.js';
 const DIR_NAME = path.resolve();
 const app = express();
 const server = http.createServer(app);
-const io = SocketIO.listen(server);
+export const io = SocketIO.listen(server);
 const PORT = 8080;
 app.get('/', (req, res) => {
     res.sendFile(`${DIR_NAME}/public/index.html`);
@@ -30,7 +30,7 @@ io.on('connection', (socket) => {
     console.log("socket connected");
     const playerNumber = game.players.size;
     const player = new Player(`player${playerNumber}`, socket.id);
-    player.pos = { x: playerNumber * 40 + 30, y: 70 };
+    player.pos.set(playerNumber * 40 + 30, 70);
     player.color = randomColor();
     game.addPlayers(player);
     io.emit('game', game.toObject());

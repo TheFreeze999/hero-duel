@@ -1,8 +1,10 @@
+import Vector from "../util/Vector.js";
+import { collisionRectRect } from "../util/collision.js";
 class Bullet {
     shooter;
-    pos = { x: 0, y: 0 };
-    size = { x: 8, y: 8 };
-    vel = { x: 0, y: -1 };
+    pos = new Vector();
+    size = new Vector(8);
+    vel = new Vector();
     game = null;
     constructor(shooter) {
         this.shooter = shooter;
@@ -13,10 +15,24 @@ class Bullet {
     elapsedFrames = 0;
     update() {
         this.elapsedFrames++;
+        if (this.elapsedFrames > this.lifetimeFrames) {
+            this.game?.removeGameObjects(this);
+            return;
+        }
         this.pos.x += this.vel.x;
         this.pos.y += this.vel.y;
-        if (this.elapsedFrames > this.lifetimeFrames)
-            this.game?.removeGameObjects(this);
+        const collidingPlayers = this.findCollidingPlayers();
+        collidingPlayers.forEach(player => this.handleCollidingPlayer(player));
+    }
+    findCollidingPlayers() {
+        if (!this.game)
+            return [];
+        return [...this.game.players].filter(player => player !== this.shooter).filter(player => collisionRectRect(player.pos, player.size, this.pos, this.size));
+    }
+    handleCollidingPlayer(player) {
+        if (this.game !== null)
+            this.game.removeGameObjects(this);
+        player.die();
     }
     toObject() {
         return {
