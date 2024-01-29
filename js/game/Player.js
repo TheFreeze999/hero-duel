@@ -30,17 +30,25 @@ class Player {
     game = null;
     lastShot = this.reloadFrames;
     heroClass = new HeroClassList.Superman();
-    energy = 10;
+    maxEnergy = 10;
+    energy = this.maxEnergy;
+    framesSinceLastEnergyIncrease = 60;
     flags = {
-        shielded: false
+        shielded: false,
+        invisible: false,
     };
-    constructor(name, socketID) {
+    constructor(name, socketID, heroClassNumber) {
         this.name = name;
         this.socketID = socketID;
+        if (heroClassNumber === 1)
+            this.heroClass = new HeroClassList.Superman();
+        if (heroClassNumber === 2)
+            this.heroClass = new HeroClassList.Batman();
         this.heroClass.adjustPlayerStats(this);
     }
     update() {
         this.lastShot++;
+        this.framesSinceLastEnergyIncrease++;
         // MOVEMENT
         let speed = this.speed;
         if ((this.movement.UP || this.movement.DOWN) && (this.movement.LEFT || this.movement.RIGHT)) {
@@ -74,6 +82,10 @@ class Player {
                 abilitySetEntry.ability.activate(this, abilitySetEntry.energyCost);
             }
         });
+        if (this.framesSinceLastEnergyIncrease >= 60) {
+            this.energy++;
+            this.framesSinceLastEnergyIncrease = 0;
+        }
     }
     shoot() {
         const bullet = new Bullet(this);

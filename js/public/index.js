@@ -3,10 +3,13 @@ const socket = io();
 export const cnv = document.querySelector('#canvas');
 const ctx = cnv.getContext('2d');
 const name = prompt('Select a name:', 'player') ?? 'player';
+const heroClass = Number(prompt(`Select a hero:
+	1=Superman
+	2=Batman`, '1')) ?? 1;
 const gameID = document.location.href.split('/').at(-1) ?? "";
 const codeEl = document.querySelector('.code');
 codeEl.innerText = gameID;
-socket.emit('entry', gameID, name);
+socket.emit('entry', gameID, name, heroClass);
 let gameData = null;
 function render() {
     ctx.clearRect(0, 0, cnv.width, cnv.height);
@@ -20,6 +23,8 @@ function render() {
         });
         // Render Players
         gameData.players.forEach(player => {
+            if (player.flags.invisible)
+                return;
             ctx.save();
             ctx.fillStyle = player.color;
             ctx.fillRect(player.pos.x - player.size.x / 2, player.pos.y - player.size.y / 2, player.size.x, player.size.y);

@@ -6,7 +6,9 @@ class ShieldAbility extends Ability {
         console.log("Shield activated");
         player.flags.shielded = true;
         player.energy -= energyCost;
-        setTimeout(() => player.flags.shielded = false, 5000);
+        setTimeout(() => {
+            player.flags.shielded = false;
+        }, 5000);
     }
 }
 export default ShieldAbility;

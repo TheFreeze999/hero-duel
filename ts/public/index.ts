@@ -9,11 +9,16 @@ export const cnv = document.querySelector('#canvas') as HTMLCanvasElement;
 const ctx = cnv.getContext('2d') as CanvasRenderingContext2D;
 
 const name = prompt('Select a name:', 'player') ?? 'player';
+const heroClass = Number(prompt(
+	`Select a hero:
+	1=Superman
+	2=Batman`
+	, '1')) ?? 1;
 
 const gameID = document.location.href.split('/').at(-1) ?? "";
 const codeEl = document.querySelector('.code') as HTMLSpanElement;
 codeEl.innerText = gameID;
-socket.emit('entry', gameID, name)
+socket.emit('entry', gameID, name, heroClass)
 
 
 let gameData: Game.AsObject | null = null;
@@ -33,6 +38,7 @@ function render() {
 
 		// Render Players
 		gameData.players.forEach(player => {
+			if (player.flags.invisible) return;
 			ctx.save();
 			ctx.fillStyle = player.color;
 			ctx.fillRect(player.pos.x - player.size.x / 2, player.pos.y - player.size.y / 2, player.size.x, player.size.y);

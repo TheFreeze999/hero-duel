@@ -59,16 +59,17 @@ setInterval(() => update(), 1000 / FPS);
 io.on('connection', (socket) => {
 	console.log("socket connected");
 
-	socket.on('entry', (gameID: string, name: string) => {
+	socket.on('entry', (gameID: string, name: string, heroClassNumber: number) => {
 		console.log("player entry");
 		const game = games.find(g => g.id === gameID);
 		if (!game) return;
 		socket.join(game.id)
 
 
-		const player = new Player(name, socket.id);
+		const player = new Player(name, socket.id, heroClassNumber);
 		const playerNumber = game.players.size;
 		player.pos.set(playerNumber * 40 + 30, 70);
+
 		game.addPlayers(player);
 
 

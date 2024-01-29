@@ -9,6 +9,7 @@ import { clamp } from "../util/functions.js";
 import HeroClass from "./HeroClass.js";
 import HeroClassList from "./HeroClassList.js";
 import { keyIsDown } from "../public/Input.js";
+import ShieldAbility from "./abilities/ShieldAbility.js";
 
 class Player {
 	private static uIDGenerator = new UIDGenerator(6);
@@ -43,18 +44,27 @@ class Player {
 
 	heroClass: HeroClass = new HeroClassList.Superman();
 
-	energy = 10;
+	maxEnergy = 10;
+	energy = this.maxEnergy;
+
+	private framesSinceLastEnergyIncrease = 60;
 
 	flags = {
-		shielded: false
+		shielded: false,
+		invisible: false,
 	}
 
-	constructor(public name: string, public socketID: Socket["id"]) {
+	constructor(public name: string, public socketID: Socket["id"], heroClassNumber: number) {
+
+		if (heroClassNumber === 1) this.heroClass = new HeroClassList.Superman();
+		if (heroClassNumber === 2) this.heroClass = new HeroClassList.Batman();
+
 		this.heroClass.adjustPlayerStats(this);
 	}
 
 	update() {
 		this.lastShot++;
+		this.framesSinceLastEnergyIncrease++;
 
 		// MOVEMENT
 		let speed = this.speed;
@@ -92,7 +102,14 @@ class Player {
 			if (this.isPressingKey(abilitySetEntry.key) && this.energy >= abilitySetEntry.energyCost) {
 				abilitySetEntry.ability.activate(this, abilitySetEntry.energyCost);
 			}
-		})
+		});
+
+		if (this.framesSinceLastEnergyIncrease >= 60) {
+			this.energy++;
+			this.framesSinceLastEnergyIncrease = 0;
+		}
+
+
 	}
 
 	shoot() {

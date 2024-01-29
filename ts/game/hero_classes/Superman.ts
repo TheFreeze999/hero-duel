@@ -7,7 +7,8 @@ class Superman extends HeroClass {
 	displayName = 'Superman';
 	imageURL = 'superman.jpg';
 	abilitySet = new Set([
-		{ energyCost: 3, key: '1', ability: new AbilityList.ShieldAbility() }
+		{ energyCost: 6, key: '1', ability: new AbilityList.ShieldAbility() },
+		{ energyCost: 4, key: '2', ability: new AbilityList.SuperSpeedAbility() },
 	]);
 
 	override adjustPlayerStats(player: Player): void {

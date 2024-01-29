@@ -12,7 +12,9 @@ class ShieldAbility extends Ability {
 
 		player.energy -= energyCost;
 
-		setTimeout(() => player.flags.shielded = false, 5000);
+		setTimeout(() => {
+			player.flags.shielded = false;
+		}, 5000);
 	}
 }
 
