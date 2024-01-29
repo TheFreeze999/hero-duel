@@ -6,6 +6,9 @@ import { randomInteger } from "../util/random.js";
 import Vector from "../util/Vector.js";
 import { io } from "../app.js";
 import { clamp } from "../util/functions.js";
+import HeroClass from "./HeroClass.js";
+import HeroClassList from "./HeroClassList.js";
+import { keyIsDown } from "../public/Input.js";
 
 class Player {
 	private static uIDGenerator = new UIDGenerator(6);
@@ -26,6 +29,8 @@ class Player {
 	reloadFrames = 30;
 	aimedAtCoords = new Vector();
 
+	keyPressStates = new Map<string, boolean>();
+
 	bulletSpeed = 5;
 	/** Bullet spread (degrees) */
 	bulletSpread = 0;
@@ -36,8 +41,16 @@ class Player {
 
 	lastShot = this.reloadFrames;
 
-	constructor(public name: string, public socketID: Socket["id"]) {
+	heroClass: HeroClass = new HeroClassList.Superman();
 
+	energy = 10;
+
+	flags = {
+		shielded: false
+	}
+
+	constructor(public name: string, public socketID: Socket["id"]) {
+		this.heroClass.adjustPlayerStats(this);
 	}
 
 	update() {
@@ -71,6 +84,15 @@ class Player {
 			this.shoot();
 			this.lastShot = 0;
 		}
+
+		// Update Abilities
+		this.heroClass.abilitySet.forEach(abilitySetEntry => {
+			abilitySetEntry.ability.update();
+
+			if (this.isPressingKey(abilitySetEntry.key) && this.energy >= abilitySetEntry.energyCost) {
+				abilitySetEntry.ability.activate(this, abilitySetEntry.energyCost);
+			}
+		})
 	}
 
 	shoot() {
@@ -93,19 +115,30 @@ class Player {
 			movement: this.movement,
 			speed: this.speed,
 			pressingMouse: this.pressingMouse,
-			color: this.color
+			color: this.color,
+			flags: this.flags
 		}
 	}
 
-	die() {
+	die(cause: Player.DyingCause) {
+		if (cause === 'bullet' && this.flags.shielded) {
+			this.flags.shielded = false;
+			return;
+		}
+
 		if (this.game) this.game.removePlayers(this);
 		const socket = io.sockets.sockets[this.socketID];
 		if (!socket) return;
 		socket.emit('death')
 	}
+
+	private isPressingKey(key: string): boolean {
+		return this.keyPressStates.get(key) ?? false;
+	}
 }
 
 namespace Player {
+	export type DyingCause = 'bullet';
 	export interface AsObject {
 		id: string,
 		name: string,
@@ -114,7 +147,8 @@ namespace Player {
 		movement: Player["movement"],
 		speed: number,
 		pressingMouse: boolean,
-		color: string
+		color: string,
+		flags: Player["flags"]
 	}
 }
 

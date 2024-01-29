@@ -69,7 +69,6 @@ io.on('connection', (socket) => {
 		const player = new Player(name, socket.id);
 		const playerNumber = game.players.size;
 		player.pos.set(playerNumber * 40 + 30, 70);
-		player.color = randomColor();
 		game.addPlayers(player);
 
 
@@ -77,6 +76,10 @@ io.on('connection', (socket) => {
 
 		socket.on('movement key', (direction: keyof Player["movement"], status: boolean) => {
 			player.movement[direction] = status;
+		});
+
+		socket.on('key press states', (keyPressStates: Record<string, boolean>) => {
+			Object.entries(keyPressStates).forEach(([key, value]) => player.keyPressStates.set(key, value))
 		});
 
 		socket.on('mouse', (pressed: boolean) => {

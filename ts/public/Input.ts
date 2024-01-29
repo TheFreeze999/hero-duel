@@ -1,12 +1,12 @@
 const cnv = document.querySelector('#canvas') as HTMLCanvasElement;
 
 
-const keys = new Map<string, boolean>();
+export const keyPressStates = new Map<string, boolean>();
 let mousePressed = false;
 const mouseCoords = { x: 0, y: 0 };
 
 export function keyIsDown(key: string): boolean {
-	return keys.get(key) ?? false;
+	return keyPressStates.get(key) ?? false;
 }
 export function mouseIsPressed() {
 	return mousePressed;
@@ -17,10 +17,10 @@ export function getMouseCoords() {
 
 document.addEventListener('keydown', (e) => {
 	e.preventDefault();
-	keys.set(e.key, true);
+	keyPressStates.set(e.key, true);
 })
 document.addEventListener('keyup', (e) => {
-	keys.set(e.key, false);
+	keyPressStates.set(e.key, false);
 })
 
 

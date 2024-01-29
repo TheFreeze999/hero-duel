@@ -40,7 +40,7 @@ class Bullet {
 	private handleCollidingPlayer(player: Player) {
 		if (this.game !== null)
 			this.game.removeGameObjects(this);
-		player.die();
+		player.die('bullet');
 	}
 
 

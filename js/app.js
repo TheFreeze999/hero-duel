@@ -4,7 +4,6 @@ import SocketIO from 'socket.io';
 import path from 'path';
 import Game from './game/Game.js';
 import Player from './game/Player.js';
-import { randomColor } from './util/random.js';
 const DIR_NAME = path.resolve();
 const app = express();
 const server = http.createServer(app);
@@ -48,11 +47,13 @@ io.on('connection', (socket) => {
         const player = new Player(name, socket.id);
         const playerNumber = game.players.size;
         player.pos.set(playerNumber * 40 + 30, 70);
-        player.color = randomColor();
         game.addPlayers(player);
         io.emit('game', game.toObject());
         socket.on('movement key', (direction, status) => {
             player.movement[direction] = status;
+        });
+        socket.on('key press states', (keyPressStates) => {
+            Object.entries(keyPressStates).forEach(([key, value]) => player.keyPressStates.set(key, value));
         });
         socket.on('mouse', (pressed) => {
             player.pressingMouse = pressed;

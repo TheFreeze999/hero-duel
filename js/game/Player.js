@@ -4,6 +4,7 @@ import { randomInteger } from "../util/random.js";
 import Vector from "../util/Vector.js";
 import { io } from "../app.js";
 import { clamp } from "../util/functions.js";
+import HeroClassList from "./HeroClassList.js";
 class Player {
     name;
     socketID;
@@ -21,15 +22,22 @@ class Player {
     pressingMouse = false;
     reloadFrames = 30;
     aimedAtCoords = new Vector();
+    keyPressStates = new Map();
     bulletSpeed = 5;
     /** Bullet spread (degrees) */
     bulletSpread = 0;
     color = "#00f";
     game = null;
     lastShot = this.reloadFrames;
+    heroClass = new HeroClassList.Superman();
+    energy = 10;
+    flags = {
+        shielded: false
+    };
     constructor(name, socketID) {
         this.name = name;
         this.socketID = socketID;
+        this.heroClass.adjustPlayerStats(this);
     }
     update() {
         this.lastShot++;
@@ -59,6 +67,13 @@ class Player {
             this.shoot();
             this.lastShot = 0;
         }
+        // Update Abilities
+        this.heroClass.abilitySet.forEach(abilitySetEntry => {
+            abilitySetEntry.ability.update();
+            if (this.isPressingKey(abilitySetEntry.key) && this.energy >= abilitySetEntry.energyCost) {
+                abilitySetEntry.ability.activate(this, abilitySetEntry.energyCost);
+            }
+        });
     }
     shoot() {
         const bullet = new Bullet(this);
@@ -77,16 +92,24 @@ class Player {
             movement: this.movement,
             speed: this.speed,
             pressingMouse: this.pressingMouse,
-            color: this.color
+            color: this.color,
+            flags: this.flags
         };
     }
-    die() {
+    die(cause) {
+        if (cause === 'bullet' && this.flags.shielded) {
+            this.flags.shielded = false;
+            return;
+        }
         if (this.game)
             this.game.removePlayers(this);
         const socket = io.sockets.sockets[this.socketID];
         if (!socket)
             return;
         socket.emit('death');
+    }
+    isPressingKey(key) {
+        return this.keyPressStates.get(key) ?? false;
     }
 }
 export default Player;

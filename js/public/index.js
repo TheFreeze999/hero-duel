@@ -1,4 +1,4 @@
-import { getMouseCoords, keyIsDown, mouseIsPressed } from "./Input.js";
+import { getMouseCoords, keyIsDown, keyPressStates, mouseIsPressed } from "./Input.js";
 const socket = io();
 export const cnv = document.querySelector('#canvas');
 const ctx = cnv.getContext('2d');
@@ -25,6 +25,11 @@ function render() {
             ctx.fillRect(player.pos.x - player.size.x / 2, player.pos.y - player.size.y / 2, player.size.x, player.size.y);
             ctx.textAlign = 'center';
             ctx.fillText(player.name, player.pos.x, player.pos.y - 20);
+            if (player.flags.shielded) {
+                ctx.strokeStyle = 'cyan';
+                ctx.lineWidth = 10;
+                ctx.strokeRect(player.pos.x - player.size.x / 2 - 40, player.pos.y - player.size.y / 2 - 40, player.size.x + 80, player.size.y + 80);
+            }
             ctx.restore();
         });
     }
@@ -38,6 +43,7 @@ socket.on('poll', () => {
     socket.emit('movement key', "LEFT", keyIsDown('ArrowLeft') || keyIsDown('a'));
     socket.emit('mouse', mouseIsPressed());
     socket.emit('mouse coords', getMouseCoords());
+    socket.emit('key press states', Object.fromEntries(keyPressStates.entries()));
 });
 socket.on('game', (_gameData) => {
     gameData = _gameData;
