@@ -61,7 +61,18 @@ socket.on('poll', () => {
 
 socket.on('game', (_gameData: Game.AsObject) => {
 	gameData = _gameData;
+
+	if (!onFirstGameDataReceival.executed) onFirstGameDataReceival(gameData);
 });
+
+function onFirstGameDataReceival(gameData: Game.AsObject) {
+	cnv.width = gameData.size.x;
+	cnv.style.setProperty('width', `${gameData.size.x}px`);
+	cnv.height = gameData.size.y;
+	cnv.style.setProperty('height', `${gameData.size.y}px`);
+	onFirstGameDataReceival.executed = true;
+}
+onFirstGameDataReceival.executed = false;
 
 socket.on('death', () => {
 	alert("you died");

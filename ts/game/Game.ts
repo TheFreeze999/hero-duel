@@ -1,4 +1,5 @@
 import UIDGenerator from "../util/UIDGenerator.js";
+import Vector from "../util/Vector.js";
 import Bullet from "./Bullet.js";
 import Player from "./Player.js";
 
@@ -7,6 +8,8 @@ class Game {
 	gameObjects = new Set<Bullet>();
 	private static uIDGenerator = new UIDGenerator(6);
 	id = Game.uIDGenerator.generate();
+
+	size = new Vector(800, 500);
 
 	addPlayers(...players: Player[]) {
 		const addPlayer = (player: Player) => {
@@ -50,6 +53,7 @@ class Game {
 			id: this.id,
 			players: [...this.players].map(player => player.toObject()),
 			gameObjects: [...this.gameObjects].map(gameObject => gameObject.toObject()),
+			size: this.size.toObject()
 		}
 	}
 }
@@ -59,6 +63,7 @@ namespace Game {
 		id: string,
 		players: Player.AsObject[];
 		gameObjects: Bullet.AsObject[];
+		size: Vector.AsObject;
 	}
 }
 

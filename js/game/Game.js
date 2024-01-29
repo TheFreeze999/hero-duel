@@ -1,9 +1,11 @@
 import UIDGenerator from "../util/UIDGenerator.js";
+import Vector from "../util/Vector.js";
 class Game {
     players = new Set();
     gameObjects = new Set();
     static uIDGenerator = new UIDGenerator(6);
     id = Game.uIDGenerator.generate();
+    size = new Vector(800, 500);
     addPlayers(...players) {
         const addPlayer = (player) => {
             this.players.add(player);
@@ -41,6 +43,7 @@ class Game {
             id: this.id,
             players: [...this.players].map(player => player.toObject()),
             gameObjects: [...this.gameObjects].map(gameObject => gameObject.toObject()),
+            size: this.size.toObject()
         };
     }
 }

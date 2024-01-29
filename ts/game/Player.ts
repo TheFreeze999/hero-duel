@@ -5,6 +5,7 @@ import Bullet from "./Bullet.js";
 import { randomInteger } from "../util/random.js";
 import Vector from "../util/Vector.js";
 import { io } from "../app.js";
+import { clamp } from "../util/functions.js";
 
 class Player {
 	private static uIDGenerator = new UIDGenerator(6);
@@ -47,10 +48,23 @@ class Player {
 		if ((this.movement.UP || this.movement.DOWN) && (this.movement.LEFT || this.movement.RIGHT)) {
 			speed *= (1 / Math.sqrt(2));
 		}
-		if (this.movement.UP) this.pos.subtract(0, speed);
-		if (this.movement.RIGHT) this.pos.add(speed, 0);
-		if (this.movement.DOWN) this.pos.add(0, speed);
-		if (this.movement.LEFT) this.pos.subtract(speed, 0);
+		if (this.movement.UP) {
+			this.pos.subtract(0, speed);
+		}
+		if (this.movement.RIGHT) {
+			this.pos.add(speed, 0);
+		}
+		if (this.movement.DOWN) {
+			this.pos.add(0, speed);
+		}
+		if (this.movement.LEFT) {
+			this.pos.subtract(speed, 0);
+		}
+
+		if (this.game) {
+			this.pos.x = clamp(this.pos.x, this.size.x / 2, this.game.size.x - this.size.x / 2);
+			this.pos.y = clamp(this.pos.y, this.size.y / 2, this.game.size.y - this.size.y / 2);
+		}
 
 		// MOUSE PRESS
 		if (this.pressingMouse && this.lastShot > this.reloadFrames) {
