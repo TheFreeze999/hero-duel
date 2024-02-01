@@ -2,6 +2,9 @@ import Ability from "../Ability.js";
 import Player from "../Player.js";
 
 class SuperSpeedAbility extends Ability {
+	name = 'superspeed';
+	displayName = 'Super Speed';
+
 	private active = false;
 	private boost = 3;
 	override activate(player: Player, energyCost: number): void {

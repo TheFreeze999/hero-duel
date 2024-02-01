@@ -2,11 +2,14 @@
 import { Socket } from "socket.io";
 import Game from "../game/Game.js";
 import { getMouseCoords, keyIsDown, keyPressStates, mouseIsPressed } from "./Input.js";
+import Player from "../game/Player.js";
 declare let io: Function;
 const socket: Socket = io();
 
 export const cnv = document.querySelector('#canvas') as HTMLCanvasElement;
 const ctx = cnv.getContext('2d') as CanvasRenderingContext2D;
+
+let playerID = "";
 
 const name = prompt('Select a name:', 'player') ?? 'player';
 const heroClass = Number(prompt(
@@ -18,7 +21,24 @@ const heroClass = Number(prompt(
 const gameID = document.location.href.split('/').at(-1) ?? "";
 const codeEl = document.querySelector('.code') as HTMLSpanElement;
 codeEl.innerText = gameID;
-socket.emit('entry', gameID, name, heroClass)
+socket.emit('entry', gameID, name, heroClass);
+
+socket.on('player data', (playerData: Player.AsObject) => {
+	playerID = playerData.id;
+
+	const abilitiesEl = document.querySelector('.abilities-heading') as HTMLUListElement;
+	abilitiesEl.innerText = "";
+	playerData.heroClass.abilitySet.forEach((entry, i) => {
+		abilitiesEl.innerHTML += `
+			<li class="ability">
+				<p class="ability-name-text">Ability <span class="ability-number">${i + 1}</span>: ${entry.ability.displayName}<span
+						class="ability-name"></span></p>
+				<p class="ability-cost-text">Energy cost: <span class="ability-cost">${entry.energyCost}</span></p>
+				<p class="ability-key-text">Keybind: <span class="ability-cost">${entry.key}</span></p>
+			</li>
+			`
+	})
+})
 
 
 let gameData: Game.AsObject | null = null;
@@ -52,6 +72,15 @@ function render() {
 			}
 			ctx.restore();
 		});
+
+		const thisPlayer = gameData.players.find(player => player.id === playerID);
+		if (thisPlayer) {
+			const heroClassNameEl = document.querySelector('.hero-class-name') as HTMLSpanElement;
+			const energyEl = document.querySelector('.energy') as HTMLSpanElement;
+
+			heroClassNameEl.innerText = thisPlayer.heroClass.displayName;
+			energyEl.innerText = thisPlayer.energy.toString();
+		}
 	}
 
 

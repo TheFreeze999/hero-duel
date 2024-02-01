@@ -72,6 +72,8 @@ io.on('connection', (socket) => {
 
 		game.addPlayers(player);
 
+		socket.emit('player data', player.toObject());
+
 
 		io.emit('game', game.toObject());
 

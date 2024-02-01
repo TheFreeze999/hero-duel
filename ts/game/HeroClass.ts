@@ -8,6 +8,15 @@ abstract class HeroClass {
 	abstract abilitySet: Set<HeroClass.AbilitySetEntry>;
 
 	adjustPlayerStats(player: Player): void { }
+
+	toObject(): HeroClass.AsObject {
+		return {
+			name: this.name,
+			displayName: this.displayName,
+			imageURL: this.imageURL,
+			abilitySet: [...this.abilitySet].map(entry => ({ ...entry, ability: entry.ability.toObject() }))
+		}
+	}
 }
 
 namespace HeroClass {
@@ -15,6 +24,19 @@ namespace HeroClass {
 		energyCost: number;
 		key: string;
 		ability: Ability;
+	}
+
+	export interface AbilitySetEntryAsObject {
+		energyCost: number;
+		key: string;
+		ability: Ability.AsObject;
+	}
+
+	export interface AsObject {
+		name: string;
+		displayName: string;
+		imageURL: string;
+		abilitySet: AbilitySetEntryAsObject[];
 	}
 }
 

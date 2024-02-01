@@ -1,5 +1,7 @@
 import Ability from "../Ability.js";
 class InvisibilityAbility extends Ability {
+    name = 'invisibility';
+    displayName = 'Invisibility';
     activate(player, energyCost) {
         if (player.flags.invisible)
             return;

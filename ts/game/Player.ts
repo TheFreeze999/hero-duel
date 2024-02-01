@@ -54,6 +54,8 @@ class Player {
 		invisible: false,
 	}
 
+	data: Record<keyof any, any> = {}
+
 	constructor(public name: string, public socketID: Socket["id"], heroClassNumber: number) {
 
 		if (heroClassNumber === 1) this.heroClass = new HeroClassList.Superman();
@@ -105,7 +107,8 @@ class Player {
 		});
 
 		if (this.framesSinceLastEnergyIncrease >= 60) {
-			this.energy++;
+			if (this.energy < this.maxEnergy)
+				this.energy++;
 			this.framesSinceLastEnergyIncrease = 0;
 		}
 
@@ -133,7 +136,9 @@ class Player {
 			speed: this.speed,
 			pressingMouse: this.pressingMouse,
 			color: this.color,
-			flags: this.flags
+			flags: this.flags,
+			heroClass: this.heroClass.toObject(),
+			energy: this.energy
 		}
 	}
 
@@ -165,7 +170,9 @@ namespace Player {
 		speed: number,
 		pressingMouse: boolean,
 		color: string,
-		flags: Player["flags"]
+		flags: Player["flags"],
+		heroClass: HeroClass.AsObject,
+		energy: number,
 	}
 }
 

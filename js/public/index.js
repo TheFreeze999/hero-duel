@@ -2,6 +2,7 @@ import { getMouseCoords, keyIsDown, keyPressStates, mouseIsPressed } from "./Inp
 const socket = io();
 export const cnv = document.querySelector('#canvas');
 const ctx = cnv.getContext('2d');
+let playerID = "";
 const name = prompt('Select a name:', 'player') ?? 'player';
 const heroClass = Number(prompt(`Select a hero:
 	1=Superman
@@ -10,6 +11,21 @@ const gameID = document.location.href.split('/').at(-1) ?? "";
 const codeEl = document.querySelector('.code');
 codeEl.innerText = gameID;
 socket.emit('entry', gameID, name, heroClass);
+socket.on('player data', (playerData) => {
+    playerID = playerData.id;
+    const abilitiesEl = document.querySelector('.abilities-heading');
+    abilitiesEl.innerText = "";
+    playerData.heroClass.abilitySet.forEach((entry, i) => {
+        abilitiesEl.innerHTML += `
+			<li class="ability">
+				<p class="ability-name-text">Ability <span class="ability-number">${i + 1}</span>: ${entry.ability.displayName}<span
+						class="ability-name"></span></p>
+				<p class="ability-cost-text">Energy cost: <span class="ability-cost">${entry.energyCost}</span></p>
+				<p class="ability-key-text">Keybind: <span class="ability-cost">${entry.key}</span></p>
+			</li>
+			`;
+    });
+});
 let gameData = null;
 function render() {
     ctx.clearRect(0, 0, cnv.width, cnv.height);
@@ -37,6 +53,13 @@ function render() {
             }
             ctx.restore();
         });
+        const thisPlayer = gameData.players.find(player => player.id === playerID);
+        if (thisPlayer) {
+            const heroClassNameEl = document.querySelector('.hero-class-name');
+            const energyEl = document.querySelector('.energy');
+            heroClassNameEl.innerText = thisPlayer.heroClass.displayName;
+            energyEl.innerText = thisPlayer.energy.toString();
+        }
     }
     window.requestAnimationFrame(() => render());
 }

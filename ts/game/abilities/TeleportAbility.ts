@@ -2,6 +2,9 @@ import Ability from "../Ability.js";
 import Player from "../Player.js";
 
 class TeleportAbility extends Ability {
+	name = 'teleport';
+	displayName = 'Teleport';
+
 	public cooldownFrames = 60;
 	private lastActivation = this.cooldownFrames;
 

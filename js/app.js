@@ -48,6 +48,7 @@ io.on('connection', (socket) => {
         const playerNumber = game.players.size;
         player.pos.set(playerNumber * 40 + 30, 70);
         game.addPlayers(player);
+        socket.emit('player data', player.toObject());
         io.emit('game', game.toObject());
         socket.on('movement key', (direction, status) => {
             player.movement[direction] = status;

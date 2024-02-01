@@ -37,6 +37,7 @@ class Player {
         shielded: false,
         invisible: false,
     };
+    data = {};
     constructor(name, socketID, heroClassNumber) {
         this.name = name;
         this.socketID = socketID;
@@ -83,7 +84,8 @@ class Player {
             }
         });
         if (this.framesSinceLastEnergyIncrease >= 60) {
-            this.energy++;
+            if (this.energy < this.maxEnergy)
+                this.energy++;
             this.framesSinceLastEnergyIncrease = 0;
         }
     }
@@ -105,7 +107,9 @@ class Player {
             speed: this.speed,
             pressingMouse: this.pressingMouse,
             color: this.color,
-            flags: this.flags
+            flags: this.flags,
+            heroClass: this.heroClass.toObject(),
+            energy: this.energy
         };
     }
     die(cause) {

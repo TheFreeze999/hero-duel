@@ -1,5 +1,7 @@
 import Ability from "../Ability.js";
 class SuperSpeedAbility extends Ability {
+    name = 'superspeed';
+    displayName = 'Super Speed';
     active = false;
     boost = 3;
     activate(player, energyCost) {

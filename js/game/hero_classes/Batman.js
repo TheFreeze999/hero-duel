@@ -5,8 +5,8 @@ class Batman extends HeroClass {
     displayName = 'Batman';
     imageURL = 'batman.jpg';
     abilitySet = new Set([
-        { energyCost: 6, key: '1', ability: new AbilityList.InvisibilityAbility() },
-        { energyCost: 8, key: '2', ability: new AbilityList.TeleportAbility() }
+        { energyCost: 8, key: '1', ability: new AbilityList.InvisibilityAbility() },
+        { energyCost: 6, key: '2', ability: new AbilityList.TeleportAbility() }
     ]);
     adjustPlayerStats(player) {
         player.color = "black";

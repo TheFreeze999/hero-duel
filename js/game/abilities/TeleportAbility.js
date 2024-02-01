@@ -1,5 +1,7 @@
 import Ability from "../Ability.js";
 class TeleportAbility extends Ability {
+    name = 'teleport';
+    displayName = 'Teleport';
     cooldownFrames = 60;
     lastActivation = this.cooldownFrames;
     update() {
