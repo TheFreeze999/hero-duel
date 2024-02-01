@@ -31,10 +31,10 @@ socket.on('player data', (playerData: Player.AsObject) => {
 	playerData.heroClass.abilitySet.forEach((entry, i) => {
 		abilitiesEl.innerHTML += `
 			<li class="ability">
-				<p class="ability-name-text">Ability <span class="ability-number">${i + 1}</span>: ${entry.ability.displayName}<span
-						class="ability-name"></span></p>
+				<p class="ability-name-text">Ability <span class="ability-number">${i + 1}</span>: <span
+						class="ability-name">${entry.ability.displayName}</span></p>
 				<p class="ability-cost-text">Energy cost: <span class="ability-cost">${entry.energyCost}</span></p>
-				<p class="ability-key-text">Keybind: <span class="ability-cost">${entry.key}</span></p>
+				<p class="ability-key-text">Keybind: <span class="ability-key">${entry.key}</span></p>
 			</li>
 			`
 	})
@@ -51,7 +51,7 @@ function render() {
 		// Render Game Objects
 		gameData.gameObjects.forEach(gameObject => {
 			ctx.save();
-			ctx.fillStyle = "black";
+			ctx.fillStyle = gameObject.color;
 			ctx.fillRect(gameObject.pos.x - gameObject.size.x / 2, gameObject.pos.y - gameObject.size.y / 2, gameObject.size.x, gameObject.size.y);
 			ctx.restore();
 		})
@@ -118,5 +118,5 @@ function onFirstGameDataReceival(gameData: Game.AsObject) {
 onFirstGameDataReceival.executed = false;
 
 socket.on('death', () => {
-	alert("you died");
+	alert("You died!");
 })

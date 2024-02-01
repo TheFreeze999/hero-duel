@@ -13,7 +13,13 @@
 <body>
 	<div class="room-info">
 		<h1>Room Code: <span class="code">------</span></h1>
-		<button class="copy" onclick="navigator.clipboard.writeText(document.location.href)">Copy Link!</button>
+		<div class="buttons">
+			<button class="copy copy-code"
+				onclick="navigator.clipboard.writeText([...document.location.href.split('/')].at(-1))">Copy
+				Code!</button>
+			<button class="copy copy-link" onclick="navigator.clipboard.writeText(document.location.href)">Copy
+				Link!</button>
+		</div>
 	</div>
 	<div class="hero-class-info">
 		<h3>Hero: <span class="hero-class-name">Superman</span></h3>

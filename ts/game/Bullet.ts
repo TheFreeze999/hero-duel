@@ -9,9 +9,13 @@ class Bullet {
 	vel = new Vector();
 
 	game: Game | null = null;
+
+	color: string;
+
 	constructor(public shooter: Player) {
 		this.pos.x = this.shooter.pos.x;
 		this.pos.y = this.shooter.pos.y;
+		this.color = this.shooter.color;
 	}
 
 	lifetimeFrames = 300;
@@ -47,10 +51,11 @@ class Bullet {
 
 
 
-	toObject() {
+	toObject(): Bullet.AsObject {
 		return {
 			pos: this.pos,
 			size: this.size,
+			color: this.color
 		};
 	}
 }
@@ -59,6 +64,7 @@ namespace Bullet {
 	export interface AsObject {
 		pos: { x: number; y: number },
 		size: { x: number; y: number },
+		color: string
 	}
 }
 

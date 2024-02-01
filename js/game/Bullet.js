@@ -6,10 +6,12 @@ class Bullet {
     size = new Vector(8);
     vel = new Vector();
     game = null;
+    color;
     constructor(shooter) {
         this.shooter = shooter;
         this.pos.x = this.shooter.pos.x;
         this.pos.y = this.shooter.pos.y;
+        this.color = this.shooter.color;
     }
     lifetimeFrames = 300;
     elapsedFrames = 0;
@@ -38,6 +40,7 @@ class Bullet {
         return {
             pos: this.pos,
             size: this.size,
+            color: this.color
         };
     }
 }

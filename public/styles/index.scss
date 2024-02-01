@@ -36,25 +36,39 @@ body {
 		}
 	}
 
-	button.copy {
-		font-size: 20px;
-		padding: 10px;
-		border-radius: 9999px;
-		border: 1px solid white;
-		background: hsl(170, 49%, 37%);
-		transition: all ease-in-out 0.2s;
-		color: #fff;
-		font-weight: bold;
-		cursor: pointer;
+	.buttons {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 10px;
 
-		&:hover {
-			background: hsl(170, 49%, 45%);
+		.copy {
+			font-size: 20px;
+			padding: 10px;
+			border-radius: 9999px;
+			border: 1px solid white;
+			transition: all ease-in-out 0.2s;
+			color: #fff;
+			font-weight: bold;
+			cursor: pointer;
+
+			background: hsl(170, 49%, 37%);
+
+			&:hover {
+				filter: brightness(130%);
+			}
+
+			&:active {
+				filter: brightness(160%);
+			}
 		}
 
-		&:active {
-			background: hsl(170, 49%, 60%);
+		.copy-code {
+			background: hsl(0, 60%, 36%);
 		}
 	}
+
+
 }
 
 .hero-class-info {
@@ -69,6 +83,21 @@ body {
 	justify-content: center;
 	gap: 10px;
 	padding: 10px;
+
+	ul {
+		list-style: none;
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+
+		.ability-name {
+			font-weight: bold;
+		}
+
+		.ability-cost {
+			color: blue;
+		}
+	}
 }
 
 #canvas {
