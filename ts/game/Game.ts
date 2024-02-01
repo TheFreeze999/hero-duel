@@ -11,6 +11,9 @@ class Game {
 
 	size = new Vector(800, 500);
 
+	currentFrame = 0;
+	private scheduledEvents = new Set<Game.ScheduledEvent>();
+
 	addPlayers(...players: Player[]) {
 		const addPlayer = (player: Player) => {
 			this.players.add(player);
@@ -46,6 +49,26 @@ class Game {
 	update() {
 		this.players.forEach(player => player.update());
 		this.gameObjects.forEach(gameObject => gameObject.update());
+
+		[...this.scheduledEvents].filter(event => event.frame === this.currentFrame).forEach(event => {
+			event.callback();
+			this.scheduledEvents.delete(event);
+		})
+
+		this.currentFrame++;
+	}
+
+	scheduleEvent(callback: Function, frame: number) {
+		this.scheduledEvents.add({
+			callback,
+			frame
+		});
+	}
+	scheduleEventIn(callback: Function, frame: number) {
+		this.scheduledEvents.add({
+			callback,
+			frame: this.currentFrame + frame
+		});
 	}
 
 	toObject(): Game.AsObject {
@@ -64,6 +87,11 @@ namespace Game {
 		players: Player.AsObject[];
 		gameObjects: Bullet.AsObject[];
 		size: Vector.AsObject;
+	}
+
+	export interface ScheduledEvent {
+		frame: number;
+		callback: Function;
 	}
 }
 

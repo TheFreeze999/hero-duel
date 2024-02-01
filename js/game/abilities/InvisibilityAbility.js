@@ -8,7 +8,7 @@ class InvisibilityAbility extends Ability {
         console.log("Invisibility activated");
         player.flags.invisible = true;
         player.energy -= energyCost;
-        setTimeout(() => player.flags.invisible = false, 2000);
+        player.game?.scheduleEventIn(() => player.flags.invisible = false, 120);
     }
 }
 export default InvisibilityAbility;

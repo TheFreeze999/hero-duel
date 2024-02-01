@@ -14,7 +14,7 @@ class InvisibilityAbility extends Ability {
 
 		player.energy -= energyCost;
 
-		setTimeout(() => player.flags.invisible = false, 2000);
+		player.game?.scheduleEventIn(() => player.flags.invisible = false, 120);
 	}
 }
 

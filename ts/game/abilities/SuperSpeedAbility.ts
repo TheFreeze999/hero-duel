@@ -17,10 +17,10 @@ class SuperSpeedAbility extends Ability {
 
 		player.energy -= energyCost;
 
-		setTimeout(() => {
+		player.game?.scheduleEventIn(() => {
 			player.speed /= this.boost;
 			this.active = false;
-		}, 2500);
+		}, 150);
 	}
 }
 

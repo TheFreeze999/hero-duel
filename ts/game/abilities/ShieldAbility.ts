@@ -19,11 +19,12 @@ class ShieldAbility extends Ability {
 
 		player.energy -= energyCost;
 
-		setTimeout(() => {
+
+		player.game?.scheduleEventIn(() => {
 			if (player.data[ShieldAbility.shieldSignatureKey] === shieldSignature) {
 				player.flags.shielded = false;
 			}
-		}, 3000);
+		}, 180);
 	}
 }
 

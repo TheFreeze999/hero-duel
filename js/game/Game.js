@@ -6,6 +6,8 @@ class Game {
     static uIDGenerator = new UIDGenerator(6);
     id = Game.uIDGenerator.generate();
     size = new Vector(800, 500);
+    currentFrame = 0;
+    scheduledEvents = new Set();
     addPlayers(...players) {
         const addPlayer = (player) => {
             this.players.add(player);
@@ -37,6 +39,23 @@ class Game {
     update() {
         this.players.forEach(player => player.update());
         this.gameObjects.forEach(gameObject => gameObject.update());
+        [...this.scheduledEvents].filter(event => event.frame === this.currentFrame).forEach(event => {
+            event.callback();
+            this.scheduledEvents.delete(event);
+        });
+        this.currentFrame++;
+    }
+    scheduleEvent(callback, frame) {
+        this.scheduledEvents.add({
+            callback,
+            frame
+        });
+    }
+    scheduleEventIn(callback, frame) {
+        this.scheduledEvents.add({
+            callback,
+            frame: this.currentFrame + frame
+        });
     }
     toObject() {
         return {
